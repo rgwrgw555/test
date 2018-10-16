@@ -1,0 +1,2 @@
+cd /fly/flyos/device/
+./stop.sh && mv -r flyos_images /home/fly/ && ln -s /home/fly/flyos_images flyos_images && ./start.sh
