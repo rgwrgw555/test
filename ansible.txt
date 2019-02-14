@@ -1,0 +1,44 @@
+﻿#查看磁盘空间
+ansible all -m shell -a "df -lh"
+# 安装应用
+ansible all -m yum -a "state=present name=tree"
+# 测试通达
+ansible all -m ping
+# 重启dev
+ansible all -m script -a '/fly/flyos/device/restart.sh'
+# 删除60天以前的图片
+ansible '*' -m shell -a 'find /fly/flyos/device/flyos_images/ -mtime +60 -name "*.jpg" -exec rm -rf {} \;'
+ansible '*' -m shell -a 'find /fly/flyos/device/flyos_images/ -mtime +60 -name "*.jpg" | xargs rm -rf'
+
+
+# 创建软链接
+ansible all -m file -a "src=/etc/resolv.conf dest=/tmp/resolv.conf state=link"
+# 删除软链接
+ansible all -m file -a "path=/tmp/resolv.conf state=absent"
+
+# 复制文件到远程服务器
+ansible all -m copy -a "src=/home/fly/flyos/test dest=/fly/flyos/device/version owner=fly group=fly mode=0644"
+
+# 将指定url上的文件下载到/dev下
+ansible all -m get_url -a 'url=http://10.1.1.116/favicon.ico dest=/fly/flyos/device/version'
+
+定时任务
+ansible all -m cron -a " name='crontab day test' minute=1 hour=1 day=*/3 job='echo test' "
+
+
+
+docker run --name jms_all -d \
+    -v /opt/mysql:/var/lib/mysql
+    -p 80:80 \
+    -p 2222:2222 \
+    -e BOOTSTRAP_TOKEN=xxx
+    -e DB_ENGINE=mysql \
+    -e DB_HOST=127.0.0.1 \
+    -e DB_PORT=3306 \
+    -e DB_USER=park \
+    -e DB_PASSWORD=park123 \
+    -e DB_NAME=jumpserver \
+    -e REDIS_HOST=192.168.x.x \
+    -e REDIS_PORT=6379 \
+    -e REDIS_PASSWORD= \
+    jumpserver/jms_all:latest

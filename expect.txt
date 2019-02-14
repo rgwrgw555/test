@@ -1,0 +1,18 @@
+#!/bin/bash
+
+i=`grep 'A temporary password' /var/log/mysqld.log | awk '{print $NF}'`
+/usr/bin/expect <<EOF
+spawn mysql -uroot -p$i
+expect "mysql>"
+send "source $basedir/mysql_init.sql\r"
+send "quit"
+expect eof
+EOF
+
+
+
+inst.vnc inst.vncpassword=fly123
+yum group list
+yum group install "GNOME Desktop"
+
+useradd -d /home/pcl -p '' pcl
